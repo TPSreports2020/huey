@@ -1,23 +1,74 @@
-<mat-grid-list cols="4" rowHeight="2:1">
-  <mat-grid-tile *ngFor="let tile of tiles" [colspan]="tile.cols" [rowspan]="tile.rows" [style.background]="tile.color">
+<form (ngSubmit)="onSubmit()" [formGroup]="searchForm" class="searchForm">
 
-    <!-- <mat-card class="example-card">
-      <mat-card-header>
-        <div mat-card-avatar class="example-header-image"></div>
-        <mat-card-title>Shiba Inu</mat-card-title>
-        <mat-card-subtitle>Dog Breed</mat-card-subtitle>
-      </mat-card-header>
-      <img mat-card-image src="https://material.angular.io/assets/img/examples/shiba2.jpg" alt="Photo of a Shiba Inu">
-      <mat-card-content>
-        <p>
-          The Shiba Inu is a deadly assassin widely feared in the orient.
-        </p>
-      </mat-card-content>
-      <mat-card-actions>
-        <button mat-button>LIKE</button>
-        <button mat-button>SHARE</button>
-      </mat-card-actions>
-    </mat-card> -->
+  <mat-form-field class="searchFormControl" appearance="standard">
+    <mat-label for="searchBar">
+      Search
+    </mat-label>
+    <input matInput type="search" formControlName="searchBar" id="searchBar">
+    <mat-icon matSuffix style="cursor: pointer;">
+      search
+    </mat-icon>
+  </mat-form-field>
 
-  </mat-grid-tile>
-</mat-grid-list>
+  <!---------------------------------- Filters ---------------------------------------------->
+
+  <button mat-button color="accent" (click)="toggleFilters()" type="button">Filters ></button>
+  <div class="filters" *ngIf="filters">
+    <mat-form-field>
+      <input matInput [matDatepicker]="dp1" placeholder="From date" formControlName="fromDate">
+      <mat-datepicker-toggle matSuffix [for]="dp1"></mat-datepicker-toggle>
+      <mat-datepicker #dp1></mat-datepicker>
+    </mat-form-field>
+    <mat-form-field>
+      <input matInput [matDatepicker]="dp2" placeholder="To date" formControlName="toDate">
+      <mat-datepicker-toggle matSuffix [for]="dp2"></mat-datepicker-toggle>
+      <mat-datepicker #dp2></mat-datepicker>
+    </mat-form-field>
+
+    <div class="checks">
+      <mat-checkbox>Exclude Opinions</mat-checkbox>
+      <mat-slide-toggle>Feature Mode</mat-slide-toggle>
+    </div>
+    <button mat-raised-button color="primary">Apply</button>
+
+  </div>
+</form>
+
+<!--------------------------------------- Articles ------------------------------------------>
+
+<div class="articleArrContainer">
+  <mat-card *ngFor="let article of articles">
+    <img mat-card-image src="{{article.urlToImage}}" alt="No Photo available" class="card-img">
+    <mat-card-header>
+      <!-- <div mat-card-avatar class="header-image"></div> -->
+      <mat-card-title>{{ article.title }}</mat-card-title>
+
+      <mat-card-subtitle>
+        {{ article.date }}
+        {{ article.source.name }}
+        <p>{{ article.author }}</p>
+      </mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content>
+      <p>{{ article.description }}</p>
+      <div *ngIf="article.content.slice(0, 10) !== article.description.slice(0, 10) && !article.content.includes('\<')">
+        <p>{{ article.content }}</p>
+      </div>
+    </mat-card-content>
+    <mat-card-actions>
+      <div style=" margin-bottom: 0; margin-top: auto;">
+        <button mat-button color="accent">Share</button>
+
+        <a href="{{article.url}}" target="_blank" rel="noopener">
+          <button mat-button style="color: #03adfc;">Visit</button>
+        </a>
+        <!-- <span style="width: 50px;"></span> -->
+        <button mat-icon-button aria-label="favorite" color="primary">
+          <mat-icon>add</mat-icon>
+        </button>
+      </div>
+    </mat-card-actions>
+  </mat-card>
+
+</div>
